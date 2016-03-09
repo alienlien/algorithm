@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import math
+maxint = 10000
 
 
 class Heap:
@@ -17,10 +18,41 @@ class Heap:
         return self.__unicode__()
 
     def sort(self):
-        for i in range(self.size-1, 0, -1):
+        for i in range(self.heap_size-1, 0, -1):
             self.array[i], self.array[0] = self.array[0], self.array[i]
             self.heap_size -= 1
             heapify(self, 0)
+
+    def max(self):
+        return self.array[0]
+
+    def extract_max(self):
+        if self.heap_size < 1:
+            return 'Heap size == 0: {0}'.format(self)
+        out = self.array[0]
+        self.array[0] = self.array[self.heap_size-1]
+        self.heap_size -= 1
+        heapify(self, 0)
+        return out
+
+    def increase_key(self, i, key):
+        if self.array[i] > key:
+            return 'New key({0}) is less than the original key({1})'. \
+                    format(key, self.array[i])
+        self.array[i] = key
+        while ((i > 0) and (self.array[parent(i)] < self.array[i])):
+            self.array[parent(i)], self.array[i] = \
+                self.array[i], self.array[parent(i)]
+            i = parent(i)
+
+    def insert(self, key):
+        self.heap_size += 1
+        self.size += 1
+        if self.size == self.heap_size:
+            self.array.append(-maxint)
+        else:
+            self.array[self.heap_size-1] = -maxint
+        self.increase_key(self.heap_size-1, key)
 
 
 def left(i):
@@ -63,5 +95,10 @@ if __name__ == '__main__':
     print('x = ', x)
     y = build_heap(Heap(x))
     print('y = ', y)
+    print('max:', y.max())
+    print('Extract: ', y.extract_max())
+    print('y = ', y)
+    print('Insert: ', y.insert(100))
+
     y.sort()
     print('y = ', y)
