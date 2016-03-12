@@ -11,17 +11,6 @@ def gen_cdf(in_list, max_val):
     return out
 
 
-def gen_sort_list(in_list):
-    out = [0] * len(in_list)
-    cdf = gen_cdf(in_list, max(in_list))
-    for i in range(len(in_list)-1, -1, -1):
-        val = in_list[i]
-        idx = cdf[val] - 1
-        out[idx] = val
-        cdf[val] -= 1
-    return out
-
-
 def gen_sort_perm(in_list):
     perm = [0] * len(in_list)
     cdf = gen_cdf(in_list, max(in_list))
@@ -38,6 +27,10 @@ def gen_sort_list_perm(in_list, perm):
     for i in range(0, len(in_list)):
         out[perm[i]] = in_list[i]
     return out
+
+
+def gen_sort_list(in_list):
+    return gen_sort_list_perm(in_list, gen_sort_perm(in_list))
 
 
 if __name__ == '__main__':
