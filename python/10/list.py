@@ -18,41 +18,38 @@ class Node:
 class List:
 
     def __init__(self):
-        self.head = None
-        self.tail = None
+        node = Node('nil')
+        node.next = node
+        node.prev = node
+        self.nil = node
 
     def insert(self, data):
         node = Node(data)
-        if self.head is None:
-            self.head = node
-            self.tail = node
-            return
-
-        self.head.prev = node
-        node.next = self.head
-        self.head = node
+        head = self.nil.next
+        node.next = head
+        head.prev = node
+        node.prev = self.nil
+        self.nil.next = node
 
     def search(self, data):
-        if self.head is None:
-            return None
-
-        node = self.head
-        while (node is not None and node.data != data):
+        node = self.nil.next
+        while (node != self.nil and node.data != data):
             node = node.next
         return node
 
     def delete(self, data):
         node = self.search(data)
-        if node is None:
-            raise Exception('Data [{0}] is not in the list: {1}'.format(data, self.__str__()))
+        if node is self.nil:
+            raise Exception('Data [{0}] is not in the list: {1}'
+                .format(data, self.__str__()))
 
     def __str__(self):
-        if self.head is None:
-            return 'Empty List'
+        if self.nil.next is None:
+            return "The list is empty"
 
-        node = self.head
+        node = self.nil.next
         s = node.__str__()
-        while (node.next is not None):
+        while (node.next != self.nil):
             node = node.next
             s += ' -> {0}'.format(node.__str__())
         return s
