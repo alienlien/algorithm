@@ -23,6 +23,9 @@ class List:
         node.prev = node
         self.nil = node
 
+    def is_empty(self):
+        return self.nil.next == self.nil
+
     def insert(self, data):
         node = Node(data)
         head = self.nil.next
@@ -42,9 +45,11 @@ class List:
         if node is self.nil:
             raise Exception('Data [{0}] is not in the list: {1}'
                 .format(data, self.__str__()))
+        node.next.prev = node.prev
+        node.prev.next = node.next
 
     def __str__(self):
-        if self.nil.next is None:
+        if self.is_empty():
             return "The list is empty"
 
         node = self.nil.next
@@ -53,6 +58,32 @@ class List:
             node = node.next
             s += ' -> {0}'.format(node.__str__())
         return s
+
+
+class Stack(List):
+
+    def __init__(self):
+        super(Stack, self).__init__()
+
+    def is_empty(self):
+        return super(Stack, self).is_empty()
+
+    def push(self, x):
+        self.insert(x)
+
+    def pop(self):
+        if self.is_empty():
+            return 'The stack is empty'
+
+        data = self.nil.next.data
+        self.delete(data)
+        return data
+
+    def __unicode__(self):
+        return '[Stack] Top -> {0}'.format(super(Stack, self).__str__())
+
+    def __str__(self):
+        return self.__unicode__()
 
 
 if __name__ == '__main__':
@@ -65,3 +96,14 @@ if __name__ == '__main__':
     print(l)
     print(l.search('abc'))
     print(l.search('not_exist'))
+
+    stack = Stack()
+    stack.push('aaa')
+    stack.push('bbb')
+    stack.push('ccc')
+    print(stack)
+    print(stack.pop())
+    print(stack.pop())
+    print(stack)
+    print(stack.pop())
+    print(stack)
